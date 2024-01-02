@@ -1,14 +1,16 @@
 import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { NxWelcomeComponent } from './nx-welcome.component';
+import { NgEmblaCarouselDirective } from '@zip-fa/ng-embla-carousel';
+import Autoplay from 'embla-carousel-autoplay';
 
 @Component({
   standalone: true,
-  imports: [NxWelcomeComponent, RouterModule],
+  imports: [
+    NgEmblaCarouselDirective
+  ],
   selector: 'ng-embla-carousel-root',
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss',
+  styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  title = 'demo';
+  public readonly plugins = [Autoplay({ delay: 4000 })];
 }

@@ -1,2 +1,12 @@
-<ng-embla-carousel-nx-welcome></ng-embla-carousel-nx-welcome>
-<router-outlet></router-outlet>
+<div class="embla"
+  [ngEmblaCarousel]="{
+    duration: 123
+  }"
+  [plugins]="plugins"
+>
+  <div class="embla__container">
+    <div class="embla__slide">Slide 1</div>
+    <div class="embla__slide">Slide 2</div>
+    <div class="embla__slide">Slide 3</div>
+  </div>
+</div>
