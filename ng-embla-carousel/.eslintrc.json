@@ -10,14 +10,7 @@
       ],
       "rules": {
         "@angular-eslint/no-input-rename": "off",
-        "@angular-eslint/directive-selector": [
-          "error",
-          {
-            "type": "attribute",
-            "prefix": "ngEmblaCarousel",
-            "style": "camelCase"
-          }
-        ],
+        "@angular-eslint/directive-selector": "off",
         "@angular-eslint/component-selector": [
           "error",
           {

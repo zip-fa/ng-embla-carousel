@@ -1,12 +1,104 @@
-<div class="embla"
-  [ngEmblaCarousel]="{
-    duration: 123
-  }"
-  [plugins]="plugins"
->
-  <div class="embla__container">
-    <div class="embla__slide">Slide 1</div>
-    <div class="embla__slide">Slide 2</div>
-    <div class="embla__slide">Slide 3</div>
+<div class="wrapper">
+  <div class="wrapper__title">
+    <img src="/assets/images/angular.png" />
+    <h1 class="header">Embla x Angular example</h1>
+  </div>
+
+  <div class="wrapper__content">
+    <div class="configuration">
+      <h2 class="header">Configuration</h2>
+
+      <div class="configuration__form"
+        [formGroup]="options"
+      >
+        <label class="form-control">
+          Loop?
+          <input type="checkbox" formControlName="loop" />
+        </label>
+
+        <label class="form-control">
+          Duration
+          <input type="number" formControlName="duration" />
+        </label>
+      </div>
+
+      {{ options.value | json }}
+
+      <h2 class="header">Methods</h2>
+
+      <div class="configuration__options">
+        <button type="button" class="button"
+          (click)="toggleAutoplayPlugin()"
+        >
+          {{ plugins()['autoPlay'] ? 'Disable' : 'Enable' }} Autoplay Plugin
+        </button>
+
+        <button type="button" class="button"
+          (click)="toggleWheelPlugin()"
+        >
+          {{ plugins()['wheel'] ? 'Disable' : 'Enable' }} Wheel Plugin
+        </button>
+
+        <button type="button" class="button"
+          (click)="addSlide()"
+        >
+          Add slide
+        </button>
+
+        <button type="button" class="button"
+          (click)="removeSlide()"
+        >
+          Remove slide
+        </button>
+
+        <button type="button" class="button"
+          (click)="emblaRef.scrollPrev()"
+        >
+          Prev slide
+        </button>
+
+        <button type="button" class="button"
+          (click)="emblaRef.scrollNext()"
+        >
+          Next slide
+        </button>
+      </div>
+
+      <h2 class="header">Events from `emblaChange`</h2>
+
+      <div class="configuration__events">
+        <div class="configuration__scroll">
+          @for (event of eventHistory(); track $index) {
+            <div class="configuration__event">
+              {{ event }}
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <main class="sandbox">
+      <h2 class="header">Carousel</h2>
+
+      <section class="sandbox__carousel">
+        <div class="embla">
+          <div class="embla__viewport"
+             #emblaRef="emblaCarousel"
+             [emblaCarousel]="options.value"
+             [emblaPlugins]="pluginsArray()"
+             (emblaChange)="onEmblaChanged($event)"
+          >
+            <div class="embla__container">
+              @for (slide of slideImages(); track $index) {
+                <div class="embla__slide">
+                  <div class="embla__slide__number"><span>{{ $index + 1 }}</span></div>
+                  <img class="embla__slide__img" [src]="slide" alt="Your alt text">
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
   </div>
 </div>

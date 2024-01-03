@@ -8,11 +8,13 @@
     "@angular/common": "~17.0.0",
     "@angular/compiler": "~17.0.0",
     "@angular/core": "~17.0.0",
+    "@angular/forms": "~17.0.0",
     "@angular/platform-browser": "~17.0.0",
     "@angular/platform-browser-dynamic": "~17.0.0",
     "@nx/angular": "17.2.8",
     "embla-carousel": "^8.0.0-rc17",
     "embla-carousel-autoplay": "^8.0.0-rc17",
+    "embla-carousel-wheel-gestures": "^8.0.0-rc05",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.0"
