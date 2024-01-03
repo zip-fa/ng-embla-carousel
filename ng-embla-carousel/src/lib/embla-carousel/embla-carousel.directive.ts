@@ -137,8 +137,10 @@ export class EmblaCarouselDirective implements OnChanges {
         this.ngZone.run(() => this.emblaChange.emit(eventName));
       });
 
-    listenEvents.forEach((eventName) => {
-      this.emblaApi!.on(eventName, () => eventsThrottler$.next(eventName));
+    this.ngZone.runOutsideAngular(() => {
+      listenEvents.forEach((eventName) => {
+        this.emblaApi!.on(eventName, () => eventsThrottler$.next(eventName));
+      });
     });
   }
 }
