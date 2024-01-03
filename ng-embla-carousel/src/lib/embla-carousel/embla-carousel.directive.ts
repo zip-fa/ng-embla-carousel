@@ -47,7 +47,7 @@ export class EmblaCarouselDirective implements OnChanges {
   /**
    * DANGER: do not call emblaApi.prevSlide(), emblaApi.nextSlide(), emblaApi.scrollTo().
    * These methods will trigger too much ChangeDetection, which will lead to serious performance issues.
-   * Use EmblaCarouselDirective apis: prevSlide(), nextSlide(), scrollTo()
+   * Use EmblaCarouselDirective apis: scrollPrev(), scrollNext(), scrollTo()
    */
   public emblaApi?: EmblaCarouselType;
 
