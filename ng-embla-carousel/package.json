@@ -1,6 +1,6 @@
 {
   "name": "@zip-fa/ng-embla-carousel",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "peerDependencies": {
     "@angular/core": ">=16.0.0",
     "embla-carousel": "^8.0.0-rc17"
