@@ -2,8 +2,7 @@
   "name": "@zip-fa/ng-embla-carousel",
   "version": "0.0.5",
   "peerDependencies": {
-    "@angular/common": "^16.0.0",
-    "@angular/core": "^16.0.0",
+    "@angular/core": ">=16.0.0",
     "embla-carousel": "^8.0.0-rc17"
   },
   "dependencies": {
