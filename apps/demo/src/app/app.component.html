@@ -86,6 +86,7 @@
              #emblaRef="emblaCarousel"
              [emblaCarousel]="options.value"
              [emblaPlugins]="pluginsArray()"
+             [subscribeToEvents]="subscribeToEvents"
              (emblaChange)="onEmblaChanged($event)"
           >
             <div class="embla__container">

@@ -42,6 +42,19 @@ export class AppComponent {
   public readonly pluginsArray = computed(() => Object.values(this.plugins()));
   public readonly plugins = signal<Record<string, EmblaPluginType>>({});
 
+  public readonly subscribeToEvents: EmblaEventType[] = [
+    'init',
+    'pointerDown',
+    'pointerUp',
+    'slidesChanged',
+    'slidesInView',
+    'select',
+    'settle',
+    'destroy',
+    'reInit',
+    'resize'
+  ];
+
   onEmblaChanged(event: EmblaEventType): void {
     this.eventHistory.update((eventHistory) => [event, ...eventHistory]);
   }
