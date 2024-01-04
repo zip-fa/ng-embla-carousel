@@ -24,6 +24,10 @@ import { EMBLA_OPTIONS_TOKEN } from './tokens';
 import { Subject, throttleTime } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+function optionsTransformer(value: EmblaOptionsType | ''): EmblaOptionsType {
+  return value || {};
+}
+
 @Directive({
   selector: '[emblaCarousel]',
   exportAs: 'emblaCarousel',
@@ -35,11 +39,17 @@ export class EmblaCarouselDirective implements OnChanges {
   private readonly ngZone = inject(NgZone);
   private readonly destroyRef = inject(DestroyRef);
 
-  @Input({ alias: 'emblaCarousel' })
+  @Input({ alias: 'emblaCarousel', transform: optionsTransformer })
   public options: EmblaOptionsType = {};
 
   @Input({ alias: 'emblaPlugins' })
   public plugins: EmblaPluginType[] = [];
+
+  @Input()
+  public subscribeToEvents: EmblaEventType[] = [];
+
+  @Input()
+  public eventsThrottleTime = 100;
 
   @Output()
   public readonly emblaChange = new EventEmitter<EmblaEventType>();
@@ -114,15 +124,10 @@ export class EmblaCarouselDirective implements OnChanges {
   }
 
   /**
-   * By default, `scroll` is excluded from default `listenEvents` array, because it triggers too much change detection,
-   * but in case we want to listen it, we need to throttle its emits.
-   * `eventsThrottler$` Subject was made just because of it.
+   * `eventsThrottler$` Subject was made just because `scroll` event fires too often.
    */
   private listenEvents(): void {
-    const { eventsThrottleTime, listenEvents } = this.globalOptions;
-
-    // This code is valid by the api design: `provideEmblaOptions({ eventsThrottleTime: undefined, listenEvents: undefined })`
-    if (!eventsThrottleTime || !listenEvents) {
+    if (0 === this.subscribeToEvents.length) {
       return;
     }
 
@@ -130,7 +135,7 @@ export class EmblaCarouselDirective implements OnChanges {
 
     eventsThrottler$
       .pipe(
-        throttleTime(eventsThrottleTime),
+        throttleTime(this.eventsThrottleTime),
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe((eventName) => {
@@ -138,7 +143,7 @@ export class EmblaCarouselDirective implements OnChanges {
       });
 
     this.ngZone.runOutsideAngular(() => {
-      listenEvents.forEach((eventName) => {
+      this.subscribeToEvents.forEach((eventName) => {
         this.emblaApi!.on(eventName, () => eventsThrottler$.next(eventName));
       });
     });
