@@ -18,8 +18,7 @@ import type {
   EmblaPluginType
 } from 'embla-carousel';
 import { EMBLA_OPTIONS_TOKEN } from './tokens';
-import { Subject, throttleTime } from 'rxjs';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Subject, takeUntil, throttleTime } from 'rxjs';
 
 function optionsTransformer(value: EmblaOptionsType | ''): EmblaOptionsType {
   return value || {};
@@ -43,6 +42,9 @@ export class EmblaCarouselDirective implements OnChanges {
   public readonly emblaChange = output<EmblaEventType>();
 
   public emblaApi?: EmblaCarouselType;
+
+  private readonly eventListeners = new Map<EmblaEventType, () => void>();
+  private eventsDestroy$ = new Subject<void>();
 
   constructor() {
     afterNextRender(() => this.init());
@@ -80,11 +82,29 @@ export class EmblaCarouselDirective implements OnChanges {
       return;
     }
 
+    this.removeEventListeners();
     this.emblaApi.reInit(this.options(), this.plugins());
+    this.listenEvents();
   }
 
   private destroy(): void {
+    this.removeEventListeners();
     this.emblaApi?.destroy();
+  }
+
+  private removeEventListeners(): void {
+    // Complete and cleanup the current subscription
+    this.eventsDestroy$.next();
+    this.eventsDestroy$.complete();
+
+    // Remove Embla event listeners
+    this.eventListeners.forEach((listener, eventName) => {
+      this.emblaApi?.off(eventName, listener);
+    });
+    this.eventListeners.clear();
+
+    // Create fresh Subject for next listenEvents() call
+    this.eventsDestroy$ = new Subject<void>();
   }
 
   /**
@@ -100,14 +120,16 @@ export class EmblaCarouselDirective implements OnChanges {
     eventsThrottler$
       .pipe(
         throttleTime(this.eventsThrottleTime()),
-        takeUntilDestroyed(this.destroyRef)
+        takeUntil(this.eventsDestroy$)
       )
       .subscribe((eventName) => {
         this.emblaChange.emit(eventName)
       });
 
     this.subscribeToEvents().forEach((eventName) => {
-      this.emblaApi!.on(eventName, () => eventsThrottler$.next(eventName));
+      const listener = () => eventsThrottler$.next(eventName);
+      this.eventListeners.set(eventName, listener);
+      this.emblaApi!.on(eventName, listener);
     });
   }
 }
